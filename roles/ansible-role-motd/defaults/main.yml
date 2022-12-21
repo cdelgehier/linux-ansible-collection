@@ -1,0 +1,16 @@
+---
+# defaults file for ansible-role-motd
+motd_content: |
+  -------------------------------
+  FQDN: {{ ansible_facts.fqdn }}
+  Distribution: {{ ansible_facts.distribution }}
+  Version: {{ ansible_facts.distribution_version }} {{ ansible_facts.distribution_release }}
+  CPUs: {{ ansible_facts.processor_vcpus }}
+  Memory: {{ (ansible_facts.memtotal_mb / 1000) | round(1) }} GB
+  -------------------------------
+
+motd_file: /etc/motd
+motd_owner: root
+motd_group: root
+motd_mode: "0640"
+...

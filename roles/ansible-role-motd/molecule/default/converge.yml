@@ -1,0 +1,11 @@
+---
+- name: Converge
+  hosts: all
+  vars_files:
+    - variables.yml
+
+  tasks:
+    - name: "Include ansible-role-motd"
+      include_role:
+        name: "ansible-role-motd"
+...

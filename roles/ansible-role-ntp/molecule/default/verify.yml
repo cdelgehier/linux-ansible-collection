@@ -1,0 +1,43 @@
+---
+# This is an example playbook to execute Ansible tests.
+
+- name: Verify
+  hosts: all
+  gather_facts: true
+  vars_files:
+    - variables.yml
+
+  tasks:
+    - name: Check config file
+      stat:
+        path: "{{ config_file[ansible_os_family] }}"
+      register: config_file
+
+    - name: Check config file exists
+      assert:
+        that:
+          - config_file.stat.exists
+
+    - name: Check service enable
+      ansible.builtin.command:
+        cmd: "systemctl is-enabled {{ service[ansible_os_family] }}"
+      register: ntp_service_enable
+      failed_when:
+        - ntp_service_enable.stdout != "enabled"
+      changed_when: false  #  don't false checks
+
+    - name: Check service active
+      ansible.builtin.command:
+        cmd: "systemctl is-active {{ service[ansible_os_family] }}"
+      register: ntp_service_active
+      failed_when:
+        - ntp_service_active.stdout != "active"
+      changed_when: false  #  don't false checks
+
+    - name: Check tracking
+      ansible.builtin.command:
+        cmd: "{{ check_command[ansible_os_family] }}"
+      register: ntp_tracking
+      failed_when:
+        - check_command_success_output[ansible_os_family]  not in ntp_tracking.stdout
+      changed_when: false  #  don't false checks

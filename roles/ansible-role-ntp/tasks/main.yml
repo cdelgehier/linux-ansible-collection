@@ -1,0 +1,35 @@
+---
+# tasks file for ansible-role-ntp
+- name: "Include {{ ansible_distribution }} variables"
+  ansible.builtin.include_vars: "{{ item }}"
+  with_first_found:
+    - "{{ ansible_distribution }}_{{ ansible_distribution_version }}.yml"
+    - "{{ ansible_distribution }}.yml"
+    - "{{ ansible_os_family }}.yml"
+  tags:
+    - install
+    - configure
+
+
+- name: "Include {{ ansible_distribution }} tasks"
+  ansible.builtin.include_tasks: "{{ item }}"
+  with_first_found:
+    - "{{ ansible_distribution }}_{{ ansible_distribution_version }}.yml"
+    - "{{ ansible_distribution }}.yml"
+    - "{{ ansible_os_family }}.yml"
+  tags:
+    - install
+    - configure
+
+- name: Configure timezone
+  community.general.timezone:
+    name: "{{ ntp_timezone }}"
+  tags: configure
+
+- name: Manage {{ ntp_service }}
+  ansible.builtin.service:
+    name: "{{ ntp_service }}"
+    state: "{{ ntp_service_state }}"
+    enabled: "{{ ntp_service_enabled }}"
+  tags: configure
+...

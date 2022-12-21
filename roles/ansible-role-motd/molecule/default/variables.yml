@@ -1,0 +1,7 @@
+---
+# motd_content:
+motd_file: /etc/motd
+motd_owner: root
+motd_group: root
+motd_mode: "0644"
+...

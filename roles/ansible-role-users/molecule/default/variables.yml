@@ -1,0 +1,42 @@
+---
+users_groups:
+  - groupname: yolo
+    gid: 1267
+  - groupname: yolo2
+
+users_list:
+  - username: toto
+    uid: 4141
+    name: "DELGEHIER Cédric"
+    # primary
+    # group:
+    # extra groups
+    groups: []
+    state: present
+    createhome: false
+    authorized_keys:
+      - "ssh-rsa AAAAB3NzaC"
+      - "ssh-rsa AAAAB3NzaB"
+    shell: /bin/bash
+
+  - username: toto2
+    uid: 4242
+    name: "YOLO Cédric"
+    group: yolo
+    groups:
+      - ftp
+      - yolo2
+    state: present
+    createhome: true
+    home_mode: "0707"
+    authorized_keys:
+      - "ssh-rsa AAAAB3NzaA"
+      - "ssh-rsa AAAAB3NzaD"
+    shell: /bin/bash
+
+  - username: napu
+    state: absent
+
+users_home_mode: "0754"
+users_home: /home
+...

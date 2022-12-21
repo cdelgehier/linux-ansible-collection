@@ -1,0 +1,11 @@
+---
+# tasks file for ansible-role-motd
+- name: Create MOTD file
+  ansible.builtin.template:
+    src: motd.j2
+    dest: "{{ motd_file }}"
+    owner: "{{ motd_owner }}"
+    group: "{{ motd_group }}"
+    mode: "{{ motd_mode }}"
+  tags: configure
+...

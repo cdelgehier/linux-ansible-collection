@@ -1,0 +1,35 @@
+---
+# This is an example playbook to execute Ansible tests.
+
+- name: Verify
+  hosts: all
+  gather_facts: false
+  vars_files:
+    - variables.yml
+
+  tasks:
+    - name: Check motd file
+      stat:
+        path: "{{ motd_file }}"
+      register: motd
+
+    - name: Check exsists
+      assert:
+        that:
+          - motd.stat.exists
+
+    - name: Check permissions
+      assert:
+        that:
+          - motd.stat.mode == motd_mode
+
+    - name: Check owner
+      assert:
+        that:
+          - motd.stat.pw_name == motd_owner
+
+    - name: Check group
+      assert:
+        that:
+          - motd.stat.gr_name == motd_group
+...

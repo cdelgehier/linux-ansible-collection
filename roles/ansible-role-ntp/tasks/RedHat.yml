@@ -1,0 +1,17 @@
+---
+# tasks file for ansible-role-ntp
+- name: Install packages
+  ansible.builtin.package:
+    name: "{{ ntp_packages }}"
+    state: present
+  tags: install
+
+- name: Configure /etc/{{ ntp_configuration_file }}
+  ansible.builtin.template:
+    src: "{{ ntp_configuration_file }}.j2"
+    dest: /etc/{{ ntp_configuration_file }}
+    mode: "0644"
+  tags: configure
+  notify:
+    - Restart ntp
+...

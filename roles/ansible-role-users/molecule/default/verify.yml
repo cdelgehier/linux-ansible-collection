@@ -1,0 +1,100 @@
+---
+# This is an example playbook to execute Ansible tests.
+
+- name: Verify
+  hosts: all
+  gather_facts: false
+  vars_files:
+    - variables.yml
+
+  tasks:
+    - name: Group exists ?
+      ansible.builtin.group:
+        name: "{{ item.groupname }}"
+        state: present
+      check_mode: true   #  dry run
+      register: group
+      failed_when:
+        - group is changed or group is failed
+      loop: "{{ users_groups }}"
+
+    - name: Check gid
+      assert:
+        that:
+          # reality == invocation
+          - item.gid == item.item.gid
+      when: item.item.gid is defined
+      loop: "{{ group.results }}"
+
+    - name: User exists ?
+      ansible.builtin.user:
+        name: "{{ item.username }}"
+        state: "{{ item.state }}"
+      check_mode: true   #  dry run
+      register: user
+      failed_when:
+        - user is changed or user is failed
+      loop: "{{ users_list }}"
+
+    - name: check a set optional attributes
+      assert:
+        that:
+          # reality == invocation
+          - item.0[item.1] == item.0.item[item.1]
+        msg: "{{ item.1 }} is not correct !"
+      when: item.0.item[item.1] is defined
+      with_nested:
+        - "{{ user.results }}"
+        - - home
+          - uid
+          - shell
+          # - group    ## needs to be tested separately
+          # - groups
+          - comment
+          - state
+
+    - name: Permission on $HOME
+      ansible.builtin.file:
+        path: "{{ item.home | default(users_home ~ '/' ~ item.username) }}"
+        owner: "{{ item.username }}"
+        group: "{{ item.group | default(item.username) }}"
+        mode: "{{ item.home_mode | default(users_home_mode) }}"
+        state: directory
+      check_mode: true   #  dry run
+      register: home
+      when:
+        - item.state | default("present") == "present"
+        - item.createhome | default(true)
+      failed_when:
+        - home is changed or home is failed
+      loop: "{{ users_list }}"
+
+    - name: Check .ssh folder
+      ansible.builtin.file:
+        path: "{{ item.home | default(users_home ~ '/' ~ item.username) }}/.ssh"
+        owner: "{{ item.username }}"
+        group: "{{ item.group | default(item.username) }}"
+        mode: "0700"
+        state: directory
+      check_mode: true   #  dry run
+      register: home
+      when:
+        - item.state | default("present") == "present"
+        - item.authorized_keys | default(true)
+      failed_when:
+        - home is changed or home is failed
+      loop: "{{ users_list }}"
+
+    - name: Check user's authorized keys
+      authorized_key:
+        key: "{{ item.authorized_keys | default([]) | join('\n') }}"
+        user: "{{ item.username }}"
+      check_mode: true   #  dry run
+      register: keys
+      when:
+        - item.state | default("present") == "present"
+        - item.createhome | default(true) or item.authorized_keys
+      failed_when:
+        - keys is changed or keys is failed
+      loop: "{{ users_list }}"
+...

@@ -1,0 +1,23 @@
+---
+# defaults file for ansible-role-users
+users_list:
+  - username: jack
+    uid: 2424
+    name: "DELGEHIER Cédric"
+    group:        # primary
+    groups: []    # extra groups
+    state: present
+    createhome: true
+    shell: /bin/bash
+
+# groups
+users_groups: []
+  # - groupname: plop
+  #   gid: 1234
+
+users_home: /home
+user_home_mode: "0750"
+
+users_ssh_key_type: rsa
+users_ssh_key_bits: 2048
+...

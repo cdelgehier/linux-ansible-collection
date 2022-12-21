@@ -1,0 +1,69 @@
+---
+# tasks file for ansible-role-users
+- name: Adding groups
+  ansible.builtin.group:
+    name: "{{ item.groupname }}"
+    gid: "{{ item.gid | default(omit) }}"
+    state: present
+  loop: "{{ users_groups }}"
+  tags: configure
+
+- name: Users addition or deletion
+  ansible.builtin.user:
+    name: "{{ item.username }}"
+    uid: "{{ item.uid | default(omit) }}"
+    home: "{{ item.home | default(omit) }}"
+    comment: "{{ item.name | default(omit) }}"
+    # system: "{{ item.system | default(omit) }}"
+    # generate_ssh_key: "{{ item.ssh_key_generate | default(omit) }}"
+    group: "{{ item.group | default(omit) }}"
+    groups: "{{ item.groups | default(omit) | join(',') }}"
+    # append: "{{ item.append | default(omit) }}"
+    # password: "{{ item.password | default(omit) }}"
+    # ssh_key_file: ".ssh/id_{{ item.ssh_key_type | default(user_ssh_key_type) }}"
+    # ssh_key_passphrase: "{{ item.ssh_key_passphrase | default(omit) }}"
+    # ssh_key_bits: "{{ item.ssh_key_bits | default(user_ssh_key_bits) }}"
+    shell: "{{ item.shell | default(omit) }}"
+    # update_password: "{{ item.update_password | default(omit) }}"
+    state: "{{ item.state | default('present') }}"
+  loop: "{{ users_list }}"
+  tags: configure
+
+
+- name: Setting user's home permission
+  ansible.builtin.file:
+    dest: "{{ item.home | default(users_home ~ '/' ~ item.username) }}"
+    owner: "{{ item.username }}"
+    group: "{{ item.group | default(item.username) }}"
+    mode: "{{ item.home_mode | default(users_home_mode) }}"
+    state: directory
+  when:
+    - item.state | default("present") == "present"
+    - item.createhome | default(true)
+  loop: "{{ users_list }}"
+  tags: configure
+
+- name: Adding user's .ssh directory
+  ansible.builtin.file:
+    dest: "{{ item.home | default(users_home ~ '/' ~ item.username) }}/.ssh"
+    owner: "{{ item.username }}"
+    group: "{{ item.group | default(item.username) }}"
+    mode: "0700"
+    state: directory
+  when:
+    - item.state | default("present") == "present"
+    - item.authorized_keys | default(true)
+  loop: "{{ users_list }}"
+  tags: configure
+
+- name: Adding user's authorized keys
+  ansible.posix.authorized_key:
+    key: "{{ item.authorized_keys | default([]) | join('\n') }}"
+    user: "{{ item.username }}"
+  when:
+    - item.state | default("present") == "present"
+    - item.createhome | default(true) or item.authorized_keys
+  loop: "{{ users_list }}"
+  tags: configure
+
+...

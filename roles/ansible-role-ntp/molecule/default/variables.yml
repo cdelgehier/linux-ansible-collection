@@ -1,0 +1,22 @@
+---
+packages:
+  RedHat:
+    - chrony
+    - util-linux
+    - tzdata
+
+service:
+  RedHat: chronyd
+
+check_command:
+  RedHat: chronyc tracking
+
+check_command_success_output:
+  RedHat: "Leap status     : Normal"
+
+config_file:
+  RedHat: /etc/chrony.conf
+
+ntp_pool:
+  - name: "0.fr.pool.ntp.org iburst"
+...

@@ -1,0 +1,11 @@
+---
+# vars file for ansible-role-ntp
+ntp_packages:
+  - chrony
+  - util-linux
+  - tzdata
+
+ntp_service: chronyd
+
+ntp_configuration_file: chrony.conf
+...
