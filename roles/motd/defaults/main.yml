@@ -1,5 +1,5 @@
 ---
-# defaults file for ansible-role-motd
+# defaults file for motd
 motd_content: |
   -------------------------------
   FQDN: {{ ansible_facts.fqdn }}

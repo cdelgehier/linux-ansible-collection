@@ -15,8 +15,8 @@ provisioner:
     ANSIBLE_ROLES_PATH: "../../roles"
 
 lint: |
-  yamllint roles/ansible-role-users
-  ansible-lint roles/ansible-role-users
+  yamllint roles/users
+  ansible-lint roles/users
 
 verifier:
   name: ansible

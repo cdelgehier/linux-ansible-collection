@@ -1,5 +1,5 @@
 ---
-# tasks file for ansible-role-ntp
+# tasks file for ntp
 - name: Install packages
   ansible.builtin.package:
     name: "{{ ntp_packages }}"

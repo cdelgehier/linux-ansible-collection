@@ -26,5 +26,5 @@ collections:
   tasks:
     - name: users
       import_role:
-        name: cdelgehier.linux.ansible-role-motd
+        name: cdelgehier.linux.motd
 ```

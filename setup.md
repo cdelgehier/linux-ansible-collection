@@ -2,7 +2,7 @@
 `ansible-galaxy collection init cdelgehier.linux`
 - `cd linux/roles`
 - Create role
-`molecule init role --driver-name docker --verifier-name ansible ansible-role-users`
+`molecule init role --driver-name docker --verifier-name ansible users`
 - Write the molecule test
 ```yaml
 - name: Verify
@@ -29,9 +29,9 @@
     - variables.yml
 
   tasks:
-    - name: "Include ansible-role-users"
+    - name: "Include users"
       ansible.builtin.include_role:
-        name: "ansible-role-users"
+        name: "users"
 ```
 - Code the feature
 - Create container `molecule converge`

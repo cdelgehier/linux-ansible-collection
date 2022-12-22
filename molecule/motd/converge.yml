@@ -5,7 +5,7 @@
     - variables.yml
 
   tasks:
-    - name: "Include ansible-role-motd"
+    - name: "Include motd"
       include_role:
-        name: "ansible-role-motd"
+        name: "motd"
 ...

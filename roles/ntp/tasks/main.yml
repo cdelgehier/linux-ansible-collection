@@ -1,5 +1,5 @@
 ---
-# tasks file for ansible-role-ntp
+# tasks file for ntp
 - name: "Include {{ ansible_distribution }} variables"
   ansible.builtin.include_vars: "{{ item }}"
   with_first_found:

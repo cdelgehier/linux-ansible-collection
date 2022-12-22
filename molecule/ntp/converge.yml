@@ -5,7 +5,7 @@
     - variables.yml
 
   tasks:
-    - name: "Include ansible-role-ntp"
+    - name: "Include ntp"
       include_role:
-        name: "ansible-role-ntp"
+        name: "ntp"
 ...

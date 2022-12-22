@@ -1,5 +1,5 @@
 ---
-# defaults file for ansible-role-users
+# defaults file for users
 users_list:
   - username: jack
     uid: 2424

@@ -1,5 +1,5 @@
 ---
-# defaults file for ansible-role-ntp
+# defaults file for ntp
 
 ntp_service_state: started
 ntp_service_enabled: true

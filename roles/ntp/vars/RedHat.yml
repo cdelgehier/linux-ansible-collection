@@ -1,5 +1,5 @@
 ---
-# vars file for ansible-role-ntp
+# vars file for ntp
 ntp_packages:
   - chrony
   - util-linux

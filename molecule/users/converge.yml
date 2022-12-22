@@ -5,8 +5,8 @@
     - variables.yml
 
   tasks:
-    - name: "Include ansible-role-users"
+    - name: "Include users"
       ansible.builtin.include_role:
-        name: "ansible-role-users"
+        name: "users"
 
 ...

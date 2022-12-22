@@ -1,5 +1,5 @@
 ---
-# vars file for ansible-role-motd
+# vars file for motd
 motd_file: /etc/motd
 motd_owner: root
 motd_group: root
