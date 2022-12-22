@@ -1,6 +1,0 @@
----
-use_default_rules: true
-skip_list:
-  # Allow Jinja templating inside task and play names
-  - name[template]
-...

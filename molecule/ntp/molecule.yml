@@ -6,8 +6,8 @@ driver:
   name: docker
 
 platforms:
-  - name: instance
-    image: quay.io/centos/centos:stream8
+  - name: "instance-${image:-centos}-${tag:-stream8}_${TOX_ENVNAME}"
+    image: "${namespace:-quay.io}/${image:-centos/centos}:${tag:-stream8}"
     pre_build_image: true
     privileged: true
     volume_mounts:
@@ -17,10 +17,12 @@ platforms:
 
 provisioner:
   name: ansible
+  env:
+    ANSIBLE_ROLES_PATH: "../../roles"
 
 lint: |
-  yamllint .
-  ansible-lint .
+  yamllint roles/ansible-role-ntp
+  ansible-lint roles/ansible-role-ntp
 
 verifier:
   name: ansible
