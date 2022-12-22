@@ -5,12 +5,19 @@ driver:
   name: docker
 
 platforms:
-  - name: "instance-${osname:-centos}-${tag:-stream8}_${TOX_ENVNAME}"
-    image: "${image:-quay.io/centos/centos}:${tag:-stream8}"
+  - name: "instance-${image:-rockylinux8}${TOX_ENVNAME}"
+    image: "geerlingguy/docker-${image:-rockylinux8}-ansible:${tag:-latest}"
     pre_build_image: true
+    command: ${MOLECULE_DOCKER_COMMAND:-""}
+    volumes:
+      - /sys/fs/cgroup:/sys/fs/cgroup:rw
+    privileged: true
+    cgroupns_mode: host
 
 provisioner:
   name: ansible
+  playbooks:
+    converge: ${MOLECULE_PLAYBOOK:-converge.yml}
   env:
     ANSIBLE_ROLES_PATH: "../../roles"
 
