@@ -6,8 +6,8 @@ driver:
   name: docker
 
 platforms:
-  - name: "instance-${image:-centos}-${tag:-stream8}_${TOX_ENVNAME}"
-    image: "${namespace:-quay.io}/${image:-centos/centos}:${tag:-stream8}"
+  - name: "instance-${osname:-centos}-${tag:-stream8}_${TOX_ENVNAME}"
+    image: "${image:-quay.io/centos/centos}:${tag:-stream8}"
     pre_build_image: true
     privileged: true
     volume_mounts:
