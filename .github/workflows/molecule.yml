@@ -1,0 +1,53 @@
+---
+name: Ansible Molecule
+
+on:
+  pull_request:
+  push:
+    branches:
+      - main
+      - master
+
+jobs:
+
+  lint:
+    runs-on: ubuntu-20.04
+    steps:
+      - name: checkout
+        uses: actions/checkout@v3
+      - uses: actions/setup-python@v4
+        with:
+          python-version: '3.10'
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install 'tox<4.0.0'
+      - name: Lint roles for each scenario
+        run: tox -e lint
+
+  test:
+    needs:
+      - lint
+    runs-on: ubuntu-20.04
+    strategy:
+      fail-fast: false
+      matrix:
+        image:
+          - rockylinux8
+          - rockylinux9
+          - ubuntu2204
+    steps:
+      - name: checkout
+        uses: actions/checkout@v3
+      - uses: actions/setup-python@v4
+        with:
+          python-version: '3.10'
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install 'tox<4.0.0'
+      - name: Molecule test for each scenario
+        run: tox
+        env:
+          image: ${{ matrix.image }}
+...
