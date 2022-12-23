@@ -29,6 +29,10 @@ galaxy_info:
     - name: EL
       versions:
         - "8"
+        - "9"
+    - name: Ubuntu
+      versions:
+        - jammy
 
   galaxy_tags: [ 'motd', 'linux']
     # List tags for your role here, one per line. A tag is a keyword that describes
