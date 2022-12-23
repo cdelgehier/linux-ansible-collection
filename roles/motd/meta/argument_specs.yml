@@ -1,0 +1,32 @@
+---
+# https://docs.ansible.com/ansible/latest/playbook_guide/playbooks_reuse_roles.html
+# https://docs.ansible.com/ansible/latest/dev_guide/developing_program_flow_modules.html#argument-spec
+argument_specs:
+  main:
+    short_description: "Create a motd file."
+    description: >
+      Templatize a Message of the day file.
+
+    author: Cédric DELGEHIER
+    options:
+      motd_content:
+        type: "str"
+        default: a generic banner
+        description: "Content of the motd file."
+      motd_file:
+        type: "path"
+        default: /etc/motd
+        description: "Path of the motd file."
+      motd_owner:
+        type: "str"
+        default: root
+        description: "Owner of the motd_file."
+      motd_group:
+        type: "str"
+        default: root
+        description: "Group owner of the motd_file."
+      motd_mode:
+        type: "str"
+        default: 0640
+        description: "Permissions of the motd_file."
+...
