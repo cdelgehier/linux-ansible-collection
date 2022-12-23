@@ -26,10 +26,39 @@
     name: "{{ ntp_timezone }}"
   tags: configure
 
-- name: Manage {{ ntp_service }}
-  ansible.builtin.service:
-    name: "{{ ntp_service }}"
-    state: "{{ ntp_service_state }}"
-    enabled: "{{ ntp_service_enabled }}"
+- name: Manage service
+  block:
+    - name: Manage {{ ntp_service }}
+      ansible.builtin.service:
+        name: "{{ ntp_service }}"
+        state: "{{ ntp_service_state }}"
+        enabled: "{{ ntp_service_enabled }}"
+      tags: configure
+  rescue:
+    - name: Get service status
+      ansible.builtin.command: "systemctl status {{ ntp_service }}"
+      register: service_status
+      changed_when: false
+      failed_when: false
+      tags:
+        - skip_ansible_lint
+
+    - name: Print when errors
+      ansible.builtin.debug:
+        var: service_status.stdout_lines
+      changed_when: false
+      failed_when: true  # stop here
+      tags:
+        - skip_ansible_lint
+
+- name: Configure /etc/{{ ntp_configuration_file }}
+  ansible.builtin.template:
+    src: "{{ ntp_configuration_file }}.j2"
+    dest: /etc/{{ ntp_configuration_file }}
+    mode: "0644"
+  notify:
+    - Restart ntp
+  when:
+    - ntp_service_enabled
   tags: configure
 ...
