@@ -23,7 +23,7 @@ jobs:
           python -m pip install --upgrade pip
           pip install 'tox<4.0.0'
       - name: Lint roles for each scenario
-        run: tox -e lint
+        run: make lint
 
   test:
     needs:
@@ -47,7 +47,8 @@ jobs:
           python -m pip install --upgrade pip
           pip install 'tox<4.0.0'
       - name: Molecule test for each scenario
-        run: tox
+        run: make test
         env:
           image: ${{ matrix.image }}
+          CI_MODE: 1
 ...
